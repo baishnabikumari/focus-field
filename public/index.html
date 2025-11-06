@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Focus Field</title>
-
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
     <div id="app">
@@ -12,9 +12,27 @@
             <h1 class="title">Focus Field</h1>
             <div class="controls">
                 <button id="btn-undo" class="btn">Undo</button>
-                <button
+                <button id="btn-restart" class="btn">Restart</button>
+                <select id="feel" class="select">
+                    <option value="A">Feel: Soft</option>
+                    <option value="B" selected>Feel: Snappy</option>
+                    <option value="C"Feel: Crisp></option>
+                </select>
+                <select id="level-select" class="select"></select>
+                <button id="btn-mute" class="btn">Mute</button>
             </div>
         </header>
+
+        <main class="main">
+            <canvas id="game" width="900" height="700"></canvas>
+        </main>
+
+        <footer class="footer">
+            <div id="status" class="status">Loading...</div>
+            <div class="credit">Designed and Build BY <strong> Me -_-</strong> Warm Edition</div>
+        </footer>
     </div>
+
+
 </body>
 </html>
