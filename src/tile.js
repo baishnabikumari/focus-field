@@ -25,6 +25,18 @@ export class Tile{
     }
 
     rotate(fee1, nowMs){
-        
+        const idx = DIRS.indexOf(this.direction);
+        this.direction = DIRS[(idx + 1) % 4];
+        this.animDuration = fee1.rotateDuration;
+        this.targetAngle = this.dirToAngle(this.direction);
+        this.animating = true;
+        this.animStart = nowMs;
+
+    }
+
+    jitter(n){
+        let x = (this.seed + n) | 0;
+        x ^= x << 13; x^= x >> 17; x^= x << 5; x >>>=0;
+        return ((x % 1000) / 1000 - 0.5) * 0.6;
     }
 }

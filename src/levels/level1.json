@@ -1,0 +1,9 @@
+{
+    "name": "Crossing Beams",
+    "cols": 4,
+    "rows": 2,
+    "tiles": [
+        ["right", "left", "down"],
+        ["up", "right", "left"]
+    ]
+}
