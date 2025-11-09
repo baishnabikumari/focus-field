@@ -52,13 +52,13 @@ export class Renderer {
         } else {
             //fallback
             const x=20,y=20,w=this.padding*2 + grid.cols*this.cell - 40,h=this.padding*2 + grid.rows*this.cell - 40,r=14;
-            ctx.moveTo(x+r,y); ctx.1ineTo(x+w-r,y);
+            ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
             ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-            ctx.1ineTo(x+w,y+h-r);
+            ctx.lineTo(x+w,y+h-r);
             ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-            ctx.1ineTo(x+r,y+h);
+            ctx.lineTo(x+r,y+h);
             ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-            ctx.1ineTo(x,y+r);
+            ctx.lineTo(x,y+r);
             ctx.quadraticCurveTo(x,y,x+r,y);
         }
 
@@ -127,13 +127,13 @@ export class Renderer {
 
             ctx.beginPath();
             ctx.moveTo(-8, 0);
-            ctx.1ineTo(18, 0);
+            ctx.lineTo(18, 0);
             ctx.stroke();
 
             ctx.beginPath();
             ctx.moveTo(18, 0);
-            ctx.1ineTo(6, -8);
-            ctx.1ineTo(6, 8);
+            ctx.lineTo(6, -8);
+            ctx.lineTo(6, 8);
             ctx.closePath();
             ctx.fill();
             ctx.stroke();
@@ -159,13 +159,13 @@ export class Renderer {
         //drwing a round rect with tiny wobble offsets
         const j = (n) => tile.jitter(n);
         ctx.moveTo(x + r + j(10), y + j(11));
-        ctx.1ineTo(x + w - r + j(12), y + j(13));
+        ctx.lineTo(x + w - r + j(12), y + j(13));
         ctx.quadraticCurveTo(x + w + j(14), y + j(15), x + w + j(16), y + r +j(17));
-        ctx.1ineTo(x + w + j(18), y + h - r + j(19));
+        ctx.lineTo(x + w + j(18), y + h - r + j(19));
         ctx.quadraticCurveTo(x + w + j(20), y + h + j(21), x + w - r + j(22), y + h + j(23));
-        ctx.1ineTo(x + r +j(24), y + h + j(25));
+        ctx.lineTo(x + r +j(24), y + h + j(25));
         ctx.quadraticCurveTo(x + j(26), y + h + j(27), x + j(28), y + h - r + j(29));
-        ctx.1ineTo(x + j(30), y + r + j(31));
+        ctx.lineTo(x + j(30), y + r + j(31));
         ctx.quadraticCurveTo(x + j(32), y + j(33), x + r + j(34), y + j(35));
     }
 }
