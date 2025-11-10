@@ -1,0 +1,9 @@
+{
+    "name": "Face to Face",
+    "cols": 4,
+    "rows": 2,
+    "tiles": [
+        ["right","left","right","left"],
+        ["left","right","left","right"]
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "Weave",
+    "cols": 5,
+    "rows": 4,
+    "tiles": [
+        ["right","down","left","down","right"],
+        ["up","right","left","right","up"],
+        ["up","left","right","left","up"],
+        ["left","up","right","up","left"]
+    ]
+}
