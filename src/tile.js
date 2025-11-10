@@ -24,10 +24,10 @@ export class Tile{
         }
     }
 
-    rotate(fee1, nowMs){
+    rotate(feel, nowMs){
         const idx = DIRS.indexOf(this.direction);
         this.direction = DIRS[(idx + 1) % 4];
-        this.animDuration = fee1.rotateDuration;
+        this.animDuration = feel.rotateDuration;
         this.targetAngle = this.dirToAngle(this.direction);
         this.animating = true;
         this.animStart = nowMs;
