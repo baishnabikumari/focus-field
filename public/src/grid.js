@@ -20,9 +20,9 @@ export class Grid {
             }
         }
     }
-    static fromLevel(level1){
+    static fromLevel(level){
         const g = new Grid(level.cols, level.rows);
-        level1.tiles.forEach((rows, y)=>{
+        level.tiles.forEach((rows, y)=>{
             rows.forEach((d, x)=>{
                 g.set(x,y,new Tile(x,y,d));
             });

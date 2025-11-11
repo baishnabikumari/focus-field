@@ -1,5 +1,5 @@
-import {Grid} from 'grid.js';
-import { Renderer} from './renderer.js';
+import { Grid } from './grid.js';
+import { Renderer } from './renderer.js';
 import { Input } from './input.js';
 import { analyzeStability } from './wave.js';
 import { FeelPresets } from './animations.js';
@@ -59,10 +59,10 @@ async function loadLevels() {
 
     //populate level select
     levelSelect.innerHTML = '';
-    levels.forEach((1var, i)=>{
+    levels.forEach((lvl, i)=>{
         const opt = document.createElement('option');
         opt.value = i;
-        opt.textContent = `${i.toString().padStart(2,'0')} - ${1v.name}`;
+        opt.textContent = `${i.toString().padStart(2,'0')} - ${lvl.name}`;
         levelSelect.appendChild(opt);
     });
 }
@@ -95,7 +95,7 @@ function rotateAt(x,y){
 }
 
 function undo(){
-    const last = undoStack.po();
+    const last = undoStack.pop();
     if(!last) return;
     const t = grid.get(last.x, last.y);
     if(!t) return;
@@ -115,7 +115,7 @@ function pickCell(px,pt, grid, renderer){
     const offsetY = (canvas.height - (renderer.padding*2 + grid.rows*renderer.cell)*s)/2;
 
     const x = (px - offsetX)/s - renderer.padding;
-    const y = (py - offsetY)/s - renderer.paddingl;
+    const y = (py - offsetY)/s - renderer.padding;
     if(x<0||y<0) return null;
     const gx = Math.floor(x / renderer.cell);
     const gy = Math.floor(y / renderer.cell);
@@ -139,7 +139,7 @@ function loop(now){
 
     if(solved && !loop._solvedFired){
         loop._solvedFired = true;
-        sfxSolved = true;
+        sfxSolved();
         setTimeout(()=>{
             const next = (currentLevelIndex + 1) % levels.length;
             startLevel(next);
@@ -158,8 +158,7 @@ muteBtn.addEventListener('click', ()=>{ muted = !muted; muteBtn.textContent = mu
 
 //Booting
 (async function main() {
-    await loadLevels(;
+    await loadLevels();
     startLevel(0);
     requestAnimationFrame(loop);
-    )
 })();

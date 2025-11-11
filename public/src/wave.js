@@ -1,4 +1,4 @@
-import { OPP, OPP } from './tile.js';
+import { OPP } from './tile.js';
 
 export function analyzeStability(grid){
     const links = new Map();   //key: "x,y" -> partnerkey

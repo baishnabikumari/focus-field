@@ -22,7 +22,7 @@ export class Renderer {
 
     drawBackground(){
         const { ctx, canvas } = this;
-        ctx.clearRect(0,0,convas.width,canvas.height);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
 
         const g = ctx.createRadialGradient(canvas.width*0.5, canvas.height*0.4, 80, canvas.width*0.5, canvas.height*0.4, Math.max(canvas.width,canvas.height)*0.7);
         g.addColorStop(0, 'rgba(255,255,255,0)');
@@ -110,7 +110,7 @@ export class Renderer {
             }
 
             ctx.fillStyle = 'rgba(215,196,174,0.92)';
-            ctx.stroke = 'rgba(79,62,45,0.6)';
+            ctx.strokeStyle = 'rgba(79,62,45,0.6)';
             ctx.lineWidth = 2.2;
 
             ctx.beginPath();

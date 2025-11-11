@@ -10,7 +10,6 @@ export class Tile{
         this.targetAngle = this.dirToAngle(direction);
         this.currentAngle = this.targetAngle;
         this.animating = false;
-        this.animating = 0;
         this.animStart = 0;
         this.animDuration = 120;
         this.seed = (ix * 73856093) ^ (iy * 19349663);

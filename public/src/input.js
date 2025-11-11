@@ -15,7 +15,7 @@ export class Input {
 
         canvas.addEventListener('mouseleave', ()=>{ this.hover = null; });
 
-        canvass.addEventListener('click', (e)=>{
+        canvas.addEventListener('click', (e)=>{
             if(!this.hover) return;
             this.onRotate(this.hover.x, this.hover.y);
         });
