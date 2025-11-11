@@ -44,8 +44,8 @@ function tone(freq, dur, attack){
     g.gain.linearRampToValueAtTime(0.15, t0 + (attack||0.005));
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     o.connect(g).connect(audioCtx.destination);
-    o.start();
-    o.start(t0 + dur + 0.02);
+    o.start(t0);
+    o.stop(t0 + dur + 0.02);
 }
 function chord(freqs, dur){ freqs.forEach((f,i)=> setTimeout(()=>tone(f, dur, 0.005), i*12)); }
 
@@ -100,13 +100,13 @@ function undo(){
     const t = grid.get(last.x, last.y);
     if(!t) return;
     t.direction = last.dir;
-    t.targetAngle = t.targetAngle;
+    t.targetAngle = t.dirToAngle(t.direction);
     t.animating = false;
 }
 
 function restart(){ startLevel(currentLevelIndex); }
 
-function pickCell(px,pt, grid, renderer){
+function pickCell(px, py, grid, renderer){
 
     //reverse of renderer layout
     const layout = renderer.layoutFor(grid);
@@ -154,7 +154,7 @@ undoBtn.addEventListener('click', ()=>{ undo(); });
 restartBtn.addEventListener('click', ()=>{ restart(); });
 feelSel.addEventListener('change', ()=>{ FEEL = FeelPresets[feelSel.value]; sfxClick(); });
 levelSelect.addEventListener('change', ()=>{ startLevel(parseInt(levelSelect.value,10)); });
-muteBtn.addEventListener('click', ()=>{ muted = !muted; muteBtn.textContent = muted? 'Unmute':'mute'; sfxClick(); });
+muteBtn.addEventListener('click', ()=>{ muted = !muted; muteBtn.textContent = muted? 'Unmute':'Mute'; sfxClick(); });
 
 //Booting
 (async function main() {

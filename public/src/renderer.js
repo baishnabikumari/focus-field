@@ -27,7 +27,7 @@ export class Renderer {
         const g = ctx.createRadialGradient(canvas.width*0.5, canvas.height*0.4, 80, canvas.width*0.5, canvas.height*0.4, Math.max(canvas.width,canvas.height)*0.7);
         g.addColorStop(0, 'rgba(255,255,255,0)');
         g.addColorStop(1, 'rgba(0,0,0,0.06)');
-        ctx.fillstyle = g;
+        ctx.fillStyle = g;
         ctx.fillRect(0,0,canvas.width,canvas.height);
     }
 
