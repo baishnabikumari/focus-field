@@ -52,7 +52,7 @@ function chord(freqs, dur){ freqs.forEach((f,i)=> setTimeout(()=>tone(f, dur, 0.
 async function loadLevels() {
     const files = ['tutorial.json','level1.json','level2.json','level3.json','level4.json'];
     levels = await Promise.all(files.map(async f=>{
-        const res = await fetch(`../src/levels/${f}`);
+        const res = await fetch(`./levels/${f}`);
         if(!res.ok) throw new Error('Failed to load '+f);
         return res.json();
     }));
