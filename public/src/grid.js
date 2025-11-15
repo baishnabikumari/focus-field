@@ -20,13 +20,16 @@ export class Grid {
             }
         }
     }
+
     static fromLevel(level){
         const g = new Grid(level.cols, level.rows);
-        level.tiles.forEach((rows, y)=>{
-            rows.forEach((d, x)=>{
-                g.set(x,y,new Tile(x,y,d));
-            });
-        });
+        for(let y=0;y<level.rows;y++){
+            const row = level.tiles[y] || [];
+            for(let x=0;x<level.cols;x++){
+                const d = row[x] ?? null;
+                g.set(x, y, d ? new Tile(x, y, d) : null);
+            }
+        }
         return g;
     }
 }

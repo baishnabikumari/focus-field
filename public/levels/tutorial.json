@@ -1,9 +1,9 @@
 {
-    "name": "Tutorial",
-    "cols": 3,
-    "rows": 2,
-    "tiles": [
-        ["right", "left", "down"],
-        ["up",   "right", "left"]
-    ]
+  "name": "Tutorial",
+  "cols": 3,
+  "rows": 2,
+  "tiles": [
+    ["right", "left", "down"],
+    ["up", "right", "left"]
+  ]
 }

@@ -33,6 +33,18 @@ function ensureAudio(){
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 }
+
+let audioInitialized = false;
+function tryResumeAudioOnGesture(){
+    // Ensure audio context exists, then resume it if suspended.
+    try{
+        if(!audioCtx) ensureAudio();
+        if(audioCtx && audioCtx.state === 'suspended'){
+            audioCtx.resume().catch(()=>{});
+        }
+    }catch(e){}
+}
+
 function tone(freq, dur, attack){
     ensureAudio();
     const t0 = audioCtx.currentTime;
@@ -54,7 +66,26 @@ async function loadLevels() {
     levels = await Promise.all(files.map(async f=>{
         const res = await fetch(`./levels/${f}`);
         if(!res.ok) throw new Error('Failed to load '+f);
-        return res.json();
+        const lvl = await res.json();
+
+        if(!Array.isArray(lvl.tiles)) lvl.tiles = [];
+        if(typeof lvl.rows !== 'number') lvl.rows = lvl.tiles.length;
+        if(typeof lvl.cols !== 'number') lvl.cols = Math.max(...lvl.tiles.map(r => Array.isArray(r) ? r.length : 0), 0);
+
+        for(let y = 0; y < lvl.rows; y++){
+            if(!Array.isArray(lvl.tiles[y])) lvl.tiles[y] = [];
+            for(let x = 0; x < lvl.cols; x++){
+                let v = lvl.tiles[y][x];
+                if(typeof v === 'string'){
+                    v = v.trim().toLowerCase();
+                    if(!['up','right','down','left'].includes(v)) v = null;
+                    lvl.tiles[y][x] = v;
+                } else {
+                    lvl.tiles[y][x] = null;
+                }
+            }
+        }
+        return lvl;
     }));
 
     //populate level select
@@ -84,6 +115,7 @@ function startLevel(i){
     sfxClick();
 }
 function rotateAt(x,y){
+    tryResumeAudioOnGesture();
     const t = grid.get(x,y);
     if(!t) return;
 

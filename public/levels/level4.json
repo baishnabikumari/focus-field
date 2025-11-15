@@ -1,11 +1,13 @@
 {
-    "name": "Weave",
-    "cols": 5,
-    "rows": 4,
-    "tiles": [
-        ["right", "down", "left", "up", "right"],
-        ["up", "left", "down", "right", "up"],
-        ["left", "down", "right", "up", "left"],
-        ["up", "right", "left", "down", "up"]
-    ]
+  "name": "Weave",
+  "cols": 6,
+  "rows": 6,
+  "tiles": [
+    ["right", "left", "right", "left", "right", "left"],
+    ["up", "down", "up", "down", "up", "down"],
+    ["left", "right", "left", "right", "left", "right"],
+    ["down", "up", "down", "up", "down", "up"],
+    ["right", "left", "right", "left", "right", "left"],
+    ["up", "down", "up", "down", "up", "down"]
+  ]
 }
