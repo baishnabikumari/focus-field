@@ -34,6 +34,13 @@ const STORAGE_KEY = 'focus_field_save_v1';
 let FEEL = FeelPresets['B'];
 let currentFeelKey = 'B';
 
+const bgmTracks = {
+    A: new Audio('assets/SOFT.mp3'),
+    B: new Audio('assets/snappy.mp3'),
+    C: new Audio('assets/crisp.mp3')
+};
+Object.values(bgmTracks).forEach(track => track.loop = true);
+
 function sfxClick(){ if(muted) return; tone(220, 0.03, 0.001); }
 function sfxRotate(){ if(muted) return; tone(340, 0.06, 0.002); }
 function sfxSolved(){ if(muted) return; chord([392,494,587], 0.35); }
@@ -51,6 +58,11 @@ function tryResumeAudioOnGesture(){
         if(!audioCtx) ensureAudio();
         if(audioCtx && audioCtx.state === 'suspended'){
             audioCtx.resume().catch(()=>{});
+        }
+
+        const track = bgmTracks[currentFeelKey];
+        if(!muted && track.pause){
+            track.play().catch(e => console.log("Music start attempt:", e));
         }
     }catch(e){}
 }
@@ -290,9 +302,16 @@ redoBtn.addEventListener('click', redo);
 restartBtn.addEventListener('click', restart);
 muteBtn.addEventListener('click', ()=>{
     muted = !muted;
-    muteBtn.textContent = muted? 'UNMUTE':'MUTE';
+    muteBtn.textContent = muted? 'UNMUTE' : 'MUTE';
     sfxClick();
     saveProgress();
+
+    const currentTrack = bgmTracks[currentFeelKey];
+    if(muted){
+        currentTrack.pause();
+    } else {
+        currentTrack.play().catch(() => {});
+    }
 });
 snowBtn.addEventListener('click', toggleSnow);
 
@@ -319,6 +338,8 @@ feelItems.forEach(item => {
         feelOptions.classList.remove('show-dropdown');
         sfxClick();
         saveProgress();
+
+        playBackgroundMusic(currentFeelKey);
     });
 });
 window.addEventListener('click', () => {
@@ -326,6 +347,19 @@ window.addEventListener('click', () => {
         feelOptions.classList.remove('show-dropdown');
     }
 });
+
+function playBackgroundMusic(key){
+    Object.keys(bgmTracks).forEach(k => {
+        if(k !== key){
+            bgmTracks[k].pause();
+            bgmTracks[k].currentTime = 0;
+        }
+    });
+    if(!muted){
+        const track = bgmTracks[key];
+        track.play().catch(e => console.log("Waiting for user interaction to play music."));
+    }
+}
 
 //Booting
 (async function main() {
@@ -355,6 +389,7 @@ window.addEventListener('click', () => {
             if(currentFeelKey === 'C') feelBtn.textContent = "CRISP 🎧";
         }
     }
+    playBackgroundMusic(currentFeelKey);
     startLevel(0);
     requestAnimationFrame(loop);
 })();
