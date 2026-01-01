@@ -211,8 +211,17 @@ function toggleSnow(){
         snowContainer.style.display = 'block';
         startSnow();
     } else {
-        snowContainer.style.display = 'none';
-        snowContainer.innerHTML = '';
+        const flakes = document.querySelectorAll('.snowflake');
+        flakes.forEach(flake => {
+            flake.style.animationIterationCount = '1';
+        });
+
+        setTimeout(() => {
+            if(!isSnowing){
+                snowContainer.innerHTML = '';
+                snowContainer.style.display = 'none';
+            }
+        }, 6000);
     }
     sfxClick();
 }
