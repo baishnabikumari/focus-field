@@ -101,15 +101,21 @@ html, body{
 }
 
 .ui-select-invisible {
-    background: transparent;
-    color: var(--accent-red);
-    border: none;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: transparent !important;
+    color: var(--text-white);
+    border: none !important;
     font-family: var(--font-main);
     font-size: 24px;
     cursor: pointer;
     outline: none;
-    -webkit-appearance: none;
-    appearance: none;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 .ui-select-invisible option{
