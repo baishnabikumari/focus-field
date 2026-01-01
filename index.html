@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,12 +20,13 @@
             <div class="controls-wrapper">
                 <div class="row-top">
                     <button id="btn-restart" class="ui-btn">RESTART</button>
-                    <div class="ui-select-wrapper">
-                        <select id="feel" class="ui-select-invisible">
-                            <option value="A">feel: Soft</option>
-                            <option value="B" selected>feel: Snappy</option>
-                            <option value="C">feel: Crisp</option>
-                        </select>
+                    <div class="custom-dropdown">
+                        <button id="feel-btn" class="ui-btn">SNAPPY 🎧</button>
+                        <div id="feel-options" class="dropdown-content">
+                            <div class="dropdown-item" data-value="A">SOFT</div>
+                            <div class="dropdown-item" data-valve="B">SNAPPY</div>
+                            <div class="dropdown-item" data-value="C">CRISP</div>
+                        </div>
                     </div>
                     <select id="level-select" class="ui-btn select-btn">
                     </select>
@@ -48,7 +50,7 @@
                 <img src="snowflake.png" alt="Snow" width="32" height="32">
             </button>
             <div class="credit">
-                Designed and Build BY <strong>Me -_-</strong> Warm Edition
+                Designed and Build BY <strong>Me -_-</strong> Winter Edition
             </div>
         </footer>
         <div id="snow-container"></div>
@@ -57,4 +59,5 @@
     <!-- Main game script -->
     <script type="module" src="src/game.js"></script>
 </body>
+
 </html>

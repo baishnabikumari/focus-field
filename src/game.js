@@ -9,7 +9,9 @@ const redoBtn = document.getElementById('btn-redo');
 const undoBtn = document.getElementById('btn-undo');
 const restartBtn = document.getElementById('btn-restart');
 const levelSelect = document.getElementById('level-select');
-const feelSel = document.getElementById('feel');
+const feelBtn = document.getElementById('feel-btn');
+const feelOptions = document.getElementById('feel-options');
+const feelItems = document.querySelectorAll('.dropdown-item')
 const muteBtn = document.getElementById('btn-mute');
 const snowBtn = document.getElementById('btn-snow');
 const snowContainer = document.getElementById('snow-container');
@@ -143,7 +145,7 @@ function undo(){
     const t = grid.get(last.x, last.y);
     if(!t) return;
 
-    redoStack.push({ x: last.x, y: last.y, direction })
+    redoStack.push({ x: last.x, y: last.y, dir: t.direction })
 
     t.direction = last.dir;
     t.targetAngle = t.dirToAngle(t.direction);
@@ -159,7 +161,7 @@ function redo(){
     if(!t) return;
     undoStack.push({x: next.x, y: next.y, dir: t.direction });
 
-    t.direction = last.dir;
+    t.direction = next.dir;
     t.targetAngle = t.dirToAngle(t.direction);
     t.animating = false;
     sfxClick();
@@ -226,7 +228,7 @@ function createSnowflake(){
     flake.classList.add('snowflake');
     flake.textContent = '❄';
 
-    const startX = Math.random() * window.innerHTML;
+    const startX = Math.random() * window.innerWidth;
     const dur = Math.random() * 3 + 2;
     const size = Math.random() * 10 + 10 + 'px';
 
@@ -249,7 +251,7 @@ function createSnowflake(){
 }
 
 //Ui wiring
-undoBtn.addEventListener('click', ()=>{ undo(); });
+undoBtn.addEventListener('click', undo);
 redoBtn.addEventListener('click', redo);
 restartBtn.addEventListener('click', restart);
 muteBtn.addEventListener('click', ()=>{
@@ -258,6 +260,35 @@ muteBtn.addEventListener('click', ()=>{
     sfxClick();
 });
 snowBtn.addEventListener('click', toggleSnow);
+
+levelSelect.addEventListener('change', () => {
+    startLevel(parseInt(levelSelect.value,10));
+});
+
+//dropdown
+feelBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    feelOptions.classList.toggle('show-dropdown');
+    sfxClick();
+});
+
+feelItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const val = item.getAttribute('data-value');
+
+        FEEL = FeelPresets[val];
+        feelBtn.textContent = item.textContent;
+
+        feelOptions.classList.remove('show-dropdown');
+        sfxClick();
+    });
+});
+window.addEventListener('click', () => {
+    if(feelOptions.classList.contains('show-dropdown')){
+        feelOptions.classList.remove('show-dropdown');
+    }
+});
 
 //Booting
 (async function main() {
