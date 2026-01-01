@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Focus Field</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Market&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -13,33 +16,43 @@
         <header class="topbar">
             <h1 class="title">Focus Field</h1>
 
-            <div class="controls">
-                <button id="btn-undo" class="btn">Undo</button>
-                <button id="btn-restart" class="btn">Restart - For 4 direction Rotation </button>
-
-                <select id="feel" class="select">
-                    <option value="A">feel: Soft</option>
-                    <option value="B" selected>feel: Snappy</option>
-                    <option value="C">feel: Crisp</option>
-                </select>
-
-                <select id="level-select" class="select"></select>
-
-                <button id="btn-mute" class="btn">Press !! If You Don't Here Sound</button>
+            <div class="controls-wrapper">
+                <div class="row-top">
+                    <button id="btn-restart" class="ui-btn">RESTART</button>
+                    <div class="ui-select-wrapper">
+                        <label for="feel">Feel :</label>
+                        <select id="feel" class="select">
+                            <option value="A">feel: Soft</option>
+                            <option value="B" selected>feel: Snappy</option>
+                            <option value="C">feel: Crisp</option>
+                        </select>
+                    </div>
+                    <select id="level-select" class="ui-btn select-btn">
+                    </select>
+                    <button id="btn-mute" class="ui-btn">MUTE</button>
+                </div>
+                <div class="row-bottom">
+                    <button id="btn-redo" class="ui-btn">REDO</button>
+                    <button id="btn-undo" class="ui-btn">UNDO</button>
+                </div>
             </div>
         </header>
 
         <main class="main">
-            <canvas id="game" width="900" height="700"></canvas>
+            <div class="canvas-container">
+                <canvas id="game" width="900" height="700"></canvas>
+            </div>
         </main>
 
         <footer class="footer">
-            <div id="status" class="status">Loading...</div>
+            <button id="btn-snow" class="snow-btn">
+                <img src="snowflake.png" alt="Snow" width="32" height="32">
+            </button>
             <div class="credit">
                 Designed and Build BY <strong>Me -_-</strong> Warm Edition
             </div>
         </footer>
-
+        <div id="snow-container"></div>
     </div>
 
     <!-- Main game script -->
