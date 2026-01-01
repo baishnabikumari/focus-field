@@ -16,7 +16,7 @@ export class Renderer {
         const h = this.padding*2 + grid.rows*this.cell;
         const scaleX = (this.canvas.width - 40)/w;
         const scaleY = (this.canvas.height - 40)/h;
-        const s = Math.min(1, scaleX, scaleY);
+        const s = Math.min(scaleX, scaleY);
         return { w, h, s};
     }
 

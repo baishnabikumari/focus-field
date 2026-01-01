@@ -5,21 +5,27 @@ import { analyzeStability } from './wave.js';
 import { FeelPresets } from './animations.js';
 
 const canvas = document.getElementById('game');
-const statusEl = document.getElementById('status');
+const redoBtn = document.getElementById('btn-redo');
 const undoBtn = document.getElementById('btn-undo');
 const restartBtn = document.getElementById('btn-restart');
 const levelSelect = document.getElementById('level-select');
 const feelSel = document.getElementById('feel');
 const muteBtn = document.getElementById('btn-mute');
+const snowBtn = document.getElementById('btn-snow');
+const snowContainer = document.getElementById('snow-container');
 
 let currentLevelIndex = 0;
 let levels = [];
 let grid = null;
 let renderer = new Renderer(canvas);
 let input = null;
+
 let undoStack = [];
+let redoStack = [];
+
 let audioCtx = null;
 let muted = false;
+let isSnowing = false;
 
 //feel selection 
 let FEEL = FeelPresets['B'];
@@ -93,7 +99,7 @@ async function loadLevels() {
     levels.forEach((lvl, i)=>{
         const opt = document.createElement('option');
         opt.value = i;
-        opt.textContent = `${i.toString().padStart(2,'0')} - ${lvl.name}`;
+        opt.textContent = i === 0 ? "TUTORIAL" : `LEVEL ${i}`;
         levelSelect.appendChild(opt);
     });
 }
@@ -102,8 +108,9 @@ function startLevel(i){
     currentLevelIndex = i;
     const level = levels[i];
     grid = Grid.fromLevel(level);
+
     undoStack = [];
-    statusEl.textContent = level.name;
+    redoStack = [];
 
     if(input){
         input.dispose();
@@ -124,6 +131,7 @@ function rotateAt(x,y){
 
     //push undo
     undoStack.push({ x, y, dir: t.direction });
+    redoStack = [];
     sfxRotate();
     const now = performance.now();
     t.rotate(FEEL, now);
@@ -134,9 +142,27 @@ function undo(){
     if(!last) return;
     const t = grid.get(last.x, last.y);
     if(!t) return;
+
+    redoStack.push({ x: last.x, y: last.y, direction })
+
     t.direction = last.dir;
     t.targetAngle = t.dirToAngle(t.direction);
     t.animating = false;
+    sfxClick();
+}
+
+function redo(){
+    const next = redoStack.pop();
+    if(!next) return;
+
+    const t = grid.get(next.x, next.y);
+    if(!t) return;
+    undoStack.push({x: next.x, y: next.y, dir: t.direction });
+
+    t.direction = last.dir;
+    t.targetAngle = t.dirToAngle(t.direction);
+    t.animating = false;
+    sfxClick();
 }
 
 function restart(){ startLevel(currentLevelIndex); }
@@ -165,13 +191,6 @@ function loop(now){
     renderer.hover = input?.hover || null;
 
     renderer.drawGrid(grid, now, FEEL);
-
-    if(solved){
-        statusEl.textContent = `Solved: ${levels[currentLevelIndex].name}`;
-    } else {
-        statusEl.textContent = `${levels[currentLevelIndex].name}`;
-    }
-
     if(solved && !loop._solvedFired){
         loop._solvedFired = true;
         sfxSolved();
@@ -184,12 +203,61 @@ function loop(now){
     requestAnimationFrame(loop);
 }
 
+function toggleSnow(){
+    isSnowing = !isSnowing;
+    if(isSnowing){
+        snowContainer.style.display = 'block';
+        startSnow();
+    } else {
+        snowContainer.style.display = 'none';
+        snowContainer.innerHTML = '';
+    }
+    sfxClick();
+}
+function startSnow(){
+    const count = 50;
+    for(let i = 0; i<count; i++){
+        createSnowflake();
+    }
+}
+function createSnowflake(){
+    if(!isSnowing) return;
+    const flake = document.createElement('div');
+    flake.classList.add('snowflake');
+    flake.textContent = '❄';
+
+    const startX = Math.random() * window.innerHTML;
+    const dur = Math.random() * 3 + 2;
+    const size = Math.random() * 10 + 10 + 'px';
+
+    flake.style.left = startX + 'px';
+    flake.style.fontSize = size;
+    flake.style.animation = `fall ${dur}s linear infinite`;
+    snowContainer.appendChild(flake);
+
+    if(!document.getElementById('snow-style')){
+        const style = document.createElement('style');
+        style.id = 'snow-style';
+        style.textContent = `
+            @keyframes fall {
+                0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; }
+                100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
 //Ui wiring
 undoBtn.addEventListener('click', ()=>{ undo(); });
-restartBtn.addEventListener('click', ()=>{ restart(); });
-feelSel.addEventListener('change', ()=>{ FEEL = FeelPresets[feelSel.value]; sfxClick(); });
-levelSelect.addEventListener('change', ()=>{ startLevel(parseInt(levelSelect.value,10)); });
-muteBtn.addEventListener('click', ()=>{ muted = !muted; muteBtn.textContent = muted? 'Unmute':'Mute'; sfxClick(); });
+redoBtn.addEventListener('click', redo);
+restartBtn.addEventListener('click', restart);
+muteBtn.addEventListener('click', ()=>{
+    muted = !muted;
+    muteBtn.textContent = muted? 'UNMUTE':'MUTE';
+    sfxClick();
+});
+snowBtn.addEventListener('click', toggleSnow);
 
 //Booting
 (async function main() {

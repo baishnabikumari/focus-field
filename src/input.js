@@ -6,8 +6,12 @@ export class Input {
 
         this.handleMouseMove = (e) => {
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+            
             const cell = this.getGridFromPoint(x,y);
             this.hover = cell; // can be none
         };
