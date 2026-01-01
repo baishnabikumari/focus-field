@@ -105,6 +105,9 @@ function startLevel(i){
     undoStack = [];
     statusEl.textContent = level.name;
 
+    if(input){
+        input.dispose();
+    }
     //re create input with grid projection
     input = new Input(
         canvas,
