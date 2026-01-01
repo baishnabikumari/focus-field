@@ -28,9 +28,11 @@ let redoStack = [];
 let audioCtx = null;
 let muted = false;
 let isSnowing = false;
+const STORAGE_KEY = 'focus_field_save_v1';
 
 //feel selection 
 let FEEL = FeelPresets['B'];
+let currentFeelKey = 'B';
 
 function sfxClick(){ if(muted) return; tone(220, 0.03, 0.001); }
 function sfxRotate(){ if(muted) return; tone(340, 0.06, 0.002); }
@@ -106,6 +108,26 @@ async function loadLevels() {
     });
 }
 
+function saveProgress(){
+    const data = {
+        levelIndex: currentLevelIndex,
+        muted: muted,
+        feelKey: currentFeelKey,
+        isSnowing: isSnowing
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadProgress(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    try {
+        return JSON.parse(raw);
+    } catch (e) {
+        return null;
+    }
+}
+
 function startLevel(i){
     currentLevelIndex = i;
     const level = levels[i];
@@ -125,6 +147,8 @@ function startLevel(i){
     );
 
     sfxClick();
+
+    saveProgress();
 }
 function rotateAt(x,y){
     tryResumeAudioOnGesture();
@@ -207,6 +231,7 @@ function loop(now){
 
 function toggleSnow(){
     isSnowing = !isSnowing;
+    saveProgress();
     if(isSnowing){
         snowContainer.style.display = 'block';
         startSnow();
@@ -267,6 +292,7 @@ muteBtn.addEventListener('click', ()=>{
     muted = !muted;
     muteBtn.textContent = muted? 'UNMUTE':'MUTE';
     sfxClick();
+    saveProgress();
 });
 snowBtn.addEventListener('click', toggleSnow);
 
@@ -287,10 +313,12 @@ feelItems.forEach(item => {
         const val = item.getAttribute('data-value');
 
         FEEL = FeelPresets[val];
-        feelBtn.textContent = item.textContent;
+        currentFeelKey = val;
 
+        feelBtn.textContent = item.textContent;
         feelOptions.classList.remove('show-dropdown');
         sfxClick();
+        saveProgress();
     });
 });
 window.addEventListener('click', () => {
@@ -302,6 +330,31 @@ window.addEventListener('click', () => {
 //Booting
 (async function main() {
     await loadLevels();
+    const saved = loadProgress();
+    let startIdx = 0;
+
+    if(saved){
+        if(typeof saved.levelIndex === 'number' && saved.levelIndex < levels.length){
+            startIdx = saved.levelIndex;
+        }
+        if(saved.muted){
+            muted = true;
+            muteBtn.textContent = 'UNMUTE';
+        }
+        if (saved.isSnowing){
+            isSnowing = true;
+            snowContainer.style.display = 'block';
+            startSnow();
+        }
+        if (saved.feelKey && FeelPresets[saved.feelKey]){
+            currentFeelKey = saved.feelKey;
+            FEEL = FeelPresets[saved.feelKey];
+
+            if(currentFeelKey === 'A') feelBtn.textContent = "SOFT 🎧";
+            if(currentFeelKey === 'B') feelBtn.textContent = "SNAPPY 🎧";
+            if(currentFeelKey === 'C') feelBtn.textContent = "CRISP 🎧";
+        }
+    }
     startLevel(0);
     requestAnimationFrame(loop);
 })();
