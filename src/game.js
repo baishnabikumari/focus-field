@@ -296,7 +296,14 @@ function loop(now) {
         loop._solvedFired = true;
         sfxSolved();
 
-        renderer.explode(); //explode(confetti)
+        //renderer.explode(); //explode(confetti)
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6},
+            colors: ['#ff4d4d', '#fff', '#000000', "#d3c4b1"],
+            zIndex: 9999 //top of everything
+        })
 
         if(currentLevelIndex === maxUnlockedLevel && currentLevelIndex + 1 < levels.length){
             maxUnlockedLevel++;
