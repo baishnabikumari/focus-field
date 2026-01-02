@@ -1,5 +1,3 @@
-<img width="1536" height="1024" alt="milkyway" src="https://github.com/user-attachments/assets/feab0b72-a4d4-40c2-b9a3-5714433464a2" />
-
 # Focus Field
 It is a game where you just have to match the arrows Which means A arrow should be pointing to another arrow **Example- ➡️⬅️ ** So if you got all the arrows Completed,
 you will be redirected to another level.
