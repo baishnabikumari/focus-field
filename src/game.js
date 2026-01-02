@@ -16,6 +16,7 @@ const feelItems = document.querySelectorAll('.dropdown-item')
 const muteBtn = document.getElementById('btn-mute');
 const snowBtn = document.getElementById('btn-snow');
 const snowContainer = document.getElementById('snow-container');
+const toast = document.getElementById('toast'); //toast for restart button
 
 let currentLevelIndex = 0;
 let levels = [];
@@ -318,9 +319,17 @@ function createSnowflake() {
 //Ui wiring
 undoBtn.addEventListener('click', undo);
 redoBtn.addEventListener('click', redo);
-restartBtn.addEventListener('click', () => {
+restartBtn.addEventListener('click', (e) => {
     restart();
     sfxClick();
+
+    toast.textContent = 'GAME RESTARTED';
+    toast.classList.remove('hidden');
+
+    setTimeout(() => {
+        toast.classList.add('hidden');
+    }, 1500);
+    
     const track = bgmTracks[currentFeelKey];
     if (!muted && track && track.paused) {
         track.play().catch(err => console.log("Music auto-resume", err));
