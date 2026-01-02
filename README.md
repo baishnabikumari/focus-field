@@ -1,5 +1,5 @@
 # Focus Field (All NEW UI and with new updates!!!)
-It is a game where you just have to match the arrows Which means A arrow should be pointing to another arrow **Example- ➡️⬅️ ** So if you got all the arrows Completed hurryy your level is completed.
+It is a game where you just have to match the arrows Which means A arrow should be pointing to another arrow **Example- ➡️⬅️** So if you got all the arrows Completed hurryy your level is completed.
 
 > **New thing to know** The level 1 is **LOCKED**. You need to pass te **TUTORIAL** to unlock the Level 1 and so on...
 
@@ -19,13 +19,14 @@ and select the level which you want to play.
 
 >  **Added New 2 levels**
 
+# Screenshots
+<img width="1440" height="813" alt="Screenshot 2026-01-03 at 4 06 33 AM" src="https://github.com/user-attachments/assets/6721d448-b43a-48f3-9406-5e82c9a6c61f" />
 
 # Structure
-
-<img width="183" height="404" alt="Screenshot 2025-11-12 at 11 45 01 AM" src="https://github.com/user-attachments/assets/9b4f6a61-5089-4738-9ea7-a6cb553bf548" />
+<img width="164" height="567" alt="Screenshot 2026-01-03 at 4 12 09 AM" src="https://github.com/user-attachments/assets/ebba1395-ee6b-4979-94ef-3f30b55b0ccd" />
 
 # video of gameplay
-
+https://github.com/user-attachments/assets/63659d76-c5dd-4144-8473-2fff3e2e1fc3
 
 ##
 # Why So many js Files?  CUZ-
