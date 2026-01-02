@@ -320,9 +320,10 @@ undoBtn.addEventListener('click', undo);
 redoBtn.addEventListener('click', redo);
 restartBtn.addEventListener('click', () => {
     restart();
+    sfxClick();
     const track = bgmTracks[currentFeelKey];
-    if (!muted && track.paused) {
-        track.play().catch(() => { });
+    if (!muted && track && track.paused) {
+        track.play().catch(err => console.log("Music auto-resume", err));
     }
 });
 
