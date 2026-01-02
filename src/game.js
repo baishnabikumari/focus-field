@@ -19,6 +19,7 @@ const snowContainer = document.getElementById('snow-container');
 const toast = document.getElementById('toast'); //toast for restart button
 
 let currentLevelIndex = 0;
+let maxUnlockedLevel = 0;
 let levels = [];
 let grid = null;
 let renderer = new Renderer(canvas);
@@ -111,6 +112,7 @@ async function loadLevels() {
         }
         return lvl;
     }));
+    renderLevelList();
 
     //populate level select
     levelOptions.innerHTML = '';
@@ -128,9 +130,38 @@ async function loadLevels() {
     });
 }
 
+function renderLevelList() {
+    levelOptions.innerHTML = '';
+    levels.forEach((lvl, i) => {
+        const div = document.createElement('div');
+        div.className = 'dropdown-item';
+
+        const isLocked = i > maxUnlockedLevel;
+        if(isLocked){
+            div.textContent = `LEVEL ${i} 🔒`;
+            div.style.opacity = "0.5";
+        } else {
+            div.textContent = i === 0 ? "TUTORIAL" : `LEVEL ${i}`;
+            div.style.opacity = "1";
+        }
+        div.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            if(isLocked){
+                showToast("LEVEL LOCKED 🔒");
+            } else {
+                startLevel(i);
+                levelOptions.classList.remove('show-dropdown');
+            }
+        });
+        levelOptions.appendChild(div);
+    });
+}
+
 function saveProgress() {
     const data = {
         levelIndex: currentLevelIndex,
+        maxUnlocked: maxUnlockedLevel
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -249,6 +280,13 @@ function loop(now) {
     if (solved && !loop._solvedFired) {
         loop._solvedFired = true;
         sfxSolved();
+
+        if(currentLevelIndex === maxUnlockedLevel && currentLevelIndex + 1 < levels.length){
+            maxUnlockedLevel++;
+            saveProgress();
+            renderLevelList();
+        }
+
         setTimeout(() => {
             const next = (currentLevelIndex + 1) % levels.length;
             startLevel(next);
@@ -279,6 +317,19 @@ function toggleSnow() {
     }
     sfxClick();
 }
+
+function showToast(message){
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+
+    if(toast.timeoutId) clearTimeout(toast.timeoutId);
+
+    toast.timeoutId = setTimeout(() => {
+        toast.classList.add('hidden');
+    }, 2000);
+}
+
 function startSnow() {
     const count = 50;
     for (let i = 0; i < count; i++) {
@@ -390,8 +441,16 @@ function playBackgroundMusic(key) {
     const saved = loadProgress();
     let startIdx = 0;
 
-    if (saved && typeof saved.levelIndex === 'number' && saved.levelIndex < levels.length) {
-            startIdx = saved.levelIndex;
+    if (saved){
+        if(typeof saved.maxUnlocked === 'number' ){
+            maxUnlockedLevel = saved.maxUnlocked;
+            renderLevelList();
+        }
+        if(typeof saved.levelIndex === 'number' && saved.levelIndex < levels.length){
+            if(saved.levelIndex <= maxUnlockedLevel){
+                startIdx = saved.levelIndex;
+            }
+        }
     }
     //     if (saved.muted) {
     //         muted = true;

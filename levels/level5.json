@@ -1,0 +1,8 @@
+{
+    "name": "The Waffle",
+    "cols": 5,
+    "rows": 5,
+    "tiles": [
+        ["down", null, "down", null]
+    ]
+}
