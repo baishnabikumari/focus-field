@@ -7,6 +7,7 @@ export class Renderer {
         this.padding = 50;
         this.cell = 80;
         this.hover = null;
+        this.particles = [];
         this.hoverPulse = 0;
         this.lastTime = 0;
     }
@@ -37,6 +38,7 @@ export class Renderer {
         const s = layout.s;
 
         this.drawBackground();
+        this.updateAndDrawParticles(ctx);
 
         ctx.save();
         ctx.translate((this.canvas.width - (this.padding*2 + grid.cols*this.cell)*s)/2, (this.canvas.height - (this.padding*2 + grid.rows*this.cell)*s)/2);
@@ -116,7 +118,7 @@ export class Renderer {
                 const t = (Math.sin(now/600) + 1)/2;
                 glow = t * 0.5 + 0.2;
             }
-            
+
             ctx.lineWidth = 2.2;
             ctx.beginPath();
             this.roundRectWobble(ctx, -half, -half, half*2, half*2, r, tile);
@@ -172,5 +174,48 @@ export class Renderer {
         ctx.quadraticCurveTo(x + j(26), y + h + j(27), x + j(28), y + h - r + j(29));
         ctx.lineTo(x + j(30), y + r + j(31));
         ctx.quadraticCurveTo(x + j(32), y + j(33), x + r + j(34), y + j(35));
+    }
+    //confetti explode(new thing ever added in my games)
+    explode(amount = 100){
+        const cx = this.canvas.width / 2;
+        const cy = this.canvas.height / 2;
+        const colors = ['#ff4d4d', '#fff', '#E28F64', '#d3c4b1'];
+
+        for(let i=0; i<amount; i++){
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 10 + 5;
+            this.particles.push({
+                x: cx,
+                y: cy,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                size: Math.random() * 8 + 4,
+                life: 1.0,
+                decay: Math.random() * 0.02 + 0.01
+            });
+        }
+    }
+    updateAndDrawParticles(ctx){
+        for(let i = this.particles.length - 1; i >= 0; i--){
+            const p = this.particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.5;
+            p.life -= p.decay;
+
+            if(p.life <= 0){
+                this.particles.splice(i, 1);
+            } else {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.life * 10);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                ctx.restore();
+
+            }
+        }
     }
 }

@@ -16,6 +16,7 @@ const feelItems = document.querySelectorAll('.dropdown-item')
 const muteBtn = document.getElementById('btn-mute');
 const snowBtn = document.getElementById('btn-snow');
 const snowContainer = document.getElementById('snow-container');
+const moveCounterEl = document.getElementById('move-counter');
 const toast = document.getElementById('toast'); //toast for restart button
 
 let currentLevelIndex = 0;
@@ -36,6 +37,7 @@ const STORAGE_KEY = 'focus_field_save_v1';
 //feel selection 
 let FEEL = FeelPresets['B'];
 let currentFeelKey = 'B';
+let moves = 0;
 
 const bgmTracks = {
     A: new Audio('assets/SOFT.mp3'),
@@ -190,6 +192,8 @@ function startLevel(i) {
 
     undoStack = [];
     redoStack = [];
+    moves = 0;
+    if(moveCounterEl) moveCounterEl.textContent = "MOVES: 0";
 
     if (input) {
         input.dispose();
@@ -229,6 +233,9 @@ function rotateAt(x, y) {
     sfxRotate();
     const now = performance.now();
     t.rotate(FEEL, now);
+
+    moves++;
+    if(moveCounterEl) moveCounterEl.textContent = `MOVES: ${moves}`;
 }
 
 function undo() {
@@ -288,6 +295,8 @@ function loop(now) {
     if (solved && !loop._solvedFired) {
         loop._solvedFired = true;
         sfxSolved();
+
+        renderer.explode(); //explode(confetti)
 
         if(currentLevelIndex === maxUnlockedLevel && currentLevelIndex + 1 < levels.length){
             maxUnlockedLevel++;
