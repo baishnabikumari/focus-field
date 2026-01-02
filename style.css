@@ -148,7 +148,7 @@ body {
     background: var(--accent-red);
     border-radius: 20px;
     box-shadow: 4px 6px 15px rgba(0, 0, 0, 0.2);
-    height: 65vh;
+    height: 52vh;
     width: auto;
     aspect-ratio: 900/700;
     max-width: 100%;
