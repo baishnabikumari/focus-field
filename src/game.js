@@ -131,9 +131,6 @@ async function loadLevels() {
 function saveProgress() {
     const data = {
         levelIndex: currentLevelIndex,
-        muted: muted,
-        feelKey: currentFeelKey,
-        isSnowing: isSnowing
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
@@ -329,18 +326,12 @@ restartBtn.addEventListener('click', (e) => {
     setTimeout(() => {
         toast.classList.add('hidden');
     }, 1500);
-    
-    const track = bgmTracks[currentFeelKey];
-    if (!muted && track && track.paused) {
-        track.play().catch(err => console.log("Music auto-resume", err));
-    }
 });
 
 muteBtn.addEventListener('click', () => {
     muted = !muted;
     muteBtn.textContent = muted ? 'UNMUTE' : 'MUTE';
     sfxClick();
-    saveProgress();
 
     const currentTrack = bgmTracks[currentFeelKey];
     if (muted) {
@@ -399,28 +390,27 @@ function playBackgroundMusic(key) {
     const saved = loadProgress();
     let startIdx = 0;
 
-    if (saved) {
-        if (typeof saved.levelIndex === 'number' && saved.levelIndex < levels.length) {
+    if (saved && typeof saved.levelIndex === 'number' && saved.levelIndex < levels.length) {
             startIdx = saved.levelIndex;
-        }
-        if (saved.muted) {
-            muted = true;
-            muteBtn.textContent = 'UNMUTE';
-        }
-        if (saved.isSnowing) {
-            isSnowing = true;
-            snowContainer.style.display = 'block';
-            startSnow();
-        }
-        if (saved.feelKey && FeelPresets[saved.feelKey]) {
-            currentFeelKey = saved.feelKey;
-            FEEL = FeelPresets[saved.feelKey];
-
-            if (currentFeelKey === 'A') feelBtn.textContent = "SOFT 🎧";
-            if (currentFeelKey === 'B') feelBtn.textContent = "SNAPPY 🎧";
-            if (currentFeelKey === 'C') feelBtn.textContent = "CRISP 🎧";
-        }
     }
+    //     if (saved.muted) {
+    //         muted = true;
+    //         muteBtn.textContent = 'UNMUTE';
+    //     }
+    //     if (saved.isSnowing) {
+    //         isSnowing = true;
+    //         snowContainer.style.display = 'block';
+    //         startSnow();
+    //     }
+    //     if (saved.feelKey && FeelPresets[saved.feelKey]) {
+    //         currentFeelKey = saved.feelKey;
+    //         FEEL = FeelPresets[saved.feelKey];
+
+    //         if (currentFeelKey === 'A') feelBtn.textContent = "SOFT 🎧";
+    //         if (currentFeelKey === 'B') feelBtn.textContent = "SNAPPY 🎧";
+    //         if (currentFeelKey === 'C') feelBtn.textContent = "CRISP 🎧";
+    //     }
+    // }
     playBackgroundMusic(currentFeelKey);
     startLevel(0);
     requestAnimationFrame(loop);
