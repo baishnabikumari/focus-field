@@ -1,12 +1,13 @@
 {
     "name": "The Waffle",
     "cols": 5,
-    "rows": 5,
+    "rows": 6,
     "tiles": [
-        ["right", "left", "right", "left", "down"],
-        ["up", null, null, null, "down"],
-        ["up", null, null, null, "down"],
-        ["up", null, null, null, "down"],
-        ["right", "left", "right", "left", "up"]
+        ["right", null, "down!", null, "down"],
+        ["up", null, "up", null, "up"],
+        ["right!", "left", null, "right", "left!"],
+        ["right", "left", "up", "right", "down"],
+        ["right", null, "up!", null, "up"],
+        ["up", null, null, null, "up"]
     ]
 }

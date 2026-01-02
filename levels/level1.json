@@ -5,6 +5,6 @@
   "tiles": [
     ["right!", "left", "down", "up"],
     ["up", "right", "left", "down!"],
-    ["left", "right", "up!", "down"]
+    ["left", "up!", "up", "down"]
   ]
 }

@@ -1,0 +1,13 @@
+{
+    "name": "The ranger",
+    "cols": 6,
+    "rows": 6,
+    "tiles": [
+        ["down!", "up", "left", "right", "left!", "down!"],
+        ["up", "down!", null, null, "down!", "up"],
+        ["down!", "up", "right", "left", "up", "down!"],
+        ["right", "down", "right", "left", "down", "left"],
+        ["down", "up!", null, null, "up!", "down"],
+        ["up!", "up", "left", "right", "left", "up!"]
+    ] 
+}

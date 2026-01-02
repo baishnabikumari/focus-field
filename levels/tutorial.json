@@ -3,7 +3,7 @@
   "cols": 3,
   "rows": 2,
   "tiles": [
-    ["right", "left", "down"],
+    ["right", "left", "left!"],
     ["up", "right", "left"]
   ]
 }

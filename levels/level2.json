@@ -4,8 +4,8 @@
   "rows": 4,
   "tiles": [
     ["right", "left", "right", "left"],
-    ["left", "right", "left", "right"],
-    ["right", "left", "right", "left"],
+    ["left", "down!", "left", "right"],
+    ["right", "left", "up!", "left"],
     ["left", "right", "left", "right"]
   ]
 }

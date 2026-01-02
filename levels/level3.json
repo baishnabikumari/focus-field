@@ -3,9 +3,9 @@
   "cols": 5,
   "rows": 4,
   "tiles": [
-    ["down", "right", "right", "left", "down"],
-    ["up", "up", "left", "right", "up"],
+    ["down", "down", "down!", "left", "down"],
+    ["right!", "up", "left", "right", "left!"],
     ["up", "right", "left", "left", "up"],
-    ["down", "left", "right", "right", "down"]
+    ["down", "left", "up!", "right", "down"]
   ]
 }
