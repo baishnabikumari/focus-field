@@ -42,33 +42,33 @@ const bgmTracks = {
 };
 Object.values(bgmTracks).forEach(track => track.loop = true);
 
-function sfxClick(){ if(muted) return; tone(220, 0.03, 0.001); }
-function sfxRotate(){ if(muted) return; tone(340, 0.06, 0.002); }
-function sfxSolved(){ if(muted) return; chord([392,494,587], 0.35); }
+function sfxClick() { if (muted) return; tone(220, 0.03, 0.001); }
+function sfxRotate() { if (muted) return; tone(340, 0.06, 0.002); }
+function sfxSolved() { if (muted) return; chord([392, 494, 587], 0.35); }
 
-function ensureAudio(){
-    if(!audioCtx){
+function ensureAudio() {
+    if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 }
 
 let audioInitialized = false;
-function tryResumeAudioOnGesture(){
+function tryResumeAudioOnGesture() {
     // Ensure audio context exists, then resume it if suspended.
-    try{
-        if(!audioCtx) ensureAudio();
-        if(audioCtx && audioCtx.state === 'suspended'){
-            audioCtx.resume().catch(()=>{});
+    try {
+        if (!audioCtx) ensureAudio();
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => { });
         }
 
         const track = bgmTracks[currentFeelKey];
-        if(!muted && track.pause){
+        if (!muted && track.pause) {
             track.play().catch(e => console.log("Music start attempt:", e));
         }
-    }catch(e){}
+    } catch (e) { }
 }
 
-function tone(freq, dur, attack){
+function tone(freq, dur, attack) {
     ensureAudio();
     const t0 = audioCtx.currentTime;
     const o = audioCtx.createOscillator();
@@ -76,32 +76,32 @@ function tone(freq, dur, attack){
     o.type = 'sine';
     o.frequency.setValueAtTime(freq, t0);
     g.gain.setValueAtTime(0, t0);
-    g.gain.linearRampToValueAtTime(0.15, t0 + (attack||0.005));
+    g.gain.linearRampToValueAtTime(0.15, t0 + (attack || 0.005));
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     o.connect(g).connect(audioCtx.destination);
     o.start(t0);
     o.stop(t0 + dur + 0.02);
 }
-function chord(freqs, dur){ freqs.forEach((f,i)=> setTimeout(()=>tone(f, dur, 0.005), i*12)); }
+function chord(freqs, dur) { freqs.forEach((f, i) => setTimeout(() => tone(f, dur, 0.005), i * 12)); }
 
 async function loadLevels() {
-    const files = ['tutorial.json','level1.json','level2.json','level3.json','level4.json'];
-    levels = await Promise.all(files.map(async f=>{
+    const files = ['tutorial.json', 'level1.json', 'level2.json', 'level3.json', 'level4.json'];
+    levels = await Promise.all(files.map(async f => {
         const res = await fetch(`./levels/${f}`);
-        if(!res.ok) throw new Error('Failed to load '+f);
+        if (!res.ok) throw new Error('Failed to load ' + f);
         const lvl = await res.json();
 
-        if(!Array.isArray(lvl.tiles)) lvl.tiles = [];
-        if(typeof lvl.rows !== 'number') lvl.rows = lvl.tiles.length;
-        if(typeof lvl.cols !== 'number') lvl.cols = Math.max(...lvl.tiles.map(r => Array.isArray(r) ? r.length : 0), 0);
+        if (!Array.isArray(lvl.tiles)) lvl.tiles = [];
+        if (typeof lvl.rows !== 'number') lvl.rows = lvl.tiles.length;
+        if (typeof lvl.cols !== 'number') lvl.cols = Math.max(...lvl.tiles.map(r => Array.isArray(r) ? r.length : 0), 0);
 
-        for(let y = 0; y < lvl.rows; y++){
-            if(!Array.isArray(lvl.tiles[y])) lvl.tiles[y] = [];
-            for(let x = 0; x < lvl.cols; x++){
+        for (let y = 0; y < lvl.rows; y++) {
+            if (!Array.isArray(lvl.tiles[y])) lvl.tiles[y] = [];
+            for (let x = 0; x < lvl.cols; x++) {
                 let v = lvl.tiles[y][x];
-                if(typeof v === 'string'){
+                if (typeof v === 'string') {
                     v = v.trim().toLowerCase();
-                    if(!['up','right','down','left'].includes(v)) v = null;
+                    if (!['up', 'right', 'down', 'left'].includes(v)) v = null;
                     lvl.tiles[y][x] = v;
                 } else {
                     lvl.tiles[y][x] = null;
@@ -113,7 +113,7 @@ async function loadLevels() {
 
     //populate level select
     levelOptions.innerHTML = '';
-    levels.forEach((lvl, i)=>{
+    levels.forEach((lvl, i) => {
         const div = document.createElement('div');
         div.className = 'dropdown-item';
         div.textContent = i === 0 ? "TUTORIAL" : `LEVEL ${i}`;
@@ -127,7 +127,7 @@ async function loadLevels() {
     });
 }
 
-function saveProgress(){
+function saveProgress() {
     const data = {
         levelIndex: currentLevelIndex,
         muted: muted,
@@ -137,9 +137,9 @@ function saveProgress(){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-function loadProgress(){
+function loadProgress() {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return null;
+    if (!raw) return null;
     try {
         return JSON.parse(raw);
     } catch (e) {
@@ -147,7 +147,7 @@ function loadProgress(){
     }
 }
 
-function startLevel(i){
+function startLevel(i) {
     currentLevelIndex = i;
     const level = levels[i];
     grid = Grid.fromLevel(level);
@@ -155,14 +155,14 @@ function startLevel(i){
     undoStack = [];
     redoStack = [];
 
-    if(input){
+    if (input) {
         input.dispose();
     }
     //re create input with grid projection
     input = new Input(
         canvas,
-        (px,py)=> pickCell(px,py,grid,renderer),
-        (gx,gy)=> rotateAt(gx,gy)
+        (px, py) => pickCell(px, py, grid, renderer),
+        (gx, gy) => rotateAt(gx, gy)
     );
 
     sfxClick();
@@ -181,10 +181,10 @@ window.addEventListener('click', () => {
     levelOptions.classList.remove('show-dropdown');
 });
 
-function rotateAt(x,y){
+function rotateAt(x, y) {
     tryResumeAudioOnGesture();
-    const t = grid.get(x,y);
-    if(!t) return;
+    const t = grid.get(x, y);
+    if (!t) return;
 
     //push undo
     undoStack.push({ x, y, dir: t.direction });
@@ -194,11 +194,11 @@ function rotateAt(x,y){
     t.rotate(FEEL, now);
 }
 
-function undo(){
+function undo() {
     const last = undoStack.pop();
-    if(!last) return;
+    if (!last) return;
     const t = grid.get(last.x, last.y);
-    if(!t) return;
+    if (!t) return;
 
     redoStack.push({ x: last.x, y: last.y, dir: t.direction })
 
@@ -208,13 +208,13 @@ function undo(){
     sfxClick();
 }
 
-function redo(){
+function redo() {
     const next = redoStack.pop();
-    if(!next) return;
+    if (!next) return;
 
     const t = grid.get(next.x, next.y);
-    if(!t) return;
-    undoStack.push({x: next.x, y: next.y, dir: t.direction });
+    if (!t) return;
+    undoStack.push({ x: next.x, y: next.y, dir: t.direction });
 
     t.direction = next.dir;
     t.targetAngle = t.dirToAngle(t.direction);
@@ -222,36 +222,36 @@ function redo(){
     sfxClick();
 }
 
-function restart(){ startLevel(currentLevelIndex); }
+function restart() { startLevel(currentLevelIndex); }
 
-function pickCell(px, py, grid, renderer){
+function pickCell(px, py, grid, renderer) {
 
     //reverse of renderer layout
     const layout = renderer.layoutFor(grid);
     const s = layout.s;
-    const offsetX = (canvas.width - (renderer.padding*2 + grid.cols*renderer.cell)*s)/2;
-    const offsetY = (canvas.height - (renderer.padding*2 + grid.rows*renderer.cell)*s)/2;
+    const offsetX = (canvas.width - (renderer.padding * 2 + grid.cols * renderer.cell) * s) / 2;
+    const offsetY = (canvas.height - (renderer.padding * 2 + grid.rows * renderer.cell) * s) / 2;
 
-    const x = (px - offsetX)/s - renderer.padding;
-    const y = (py - offsetY)/s - renderer.padding;
-    if(x<0||y<0) return null;
+    const x = (px - offsetX) / s - renderer.padding;
+    const y = (py - offsetY) / s - renderer.padding;
+    if (x < 0 || y < 0) return null;
     const gx = Math.floor(x / renderer.cell);
     const gy = Math.floor(y / renderer.cell);
-    if(gx<0||gx>=grid.cols||gy<0||gy>=grid.rows) return null;
+    if (gx < 0 || gx >= grid.cols || gy < 0 || gy >= grid.rows) return null;
     return { x: gx, y: gy };
 }
 
-function loop(now){
-    if(!grid) return requestAnimationFrame(loop);
+function loop(now) {
+    if (!grid) return requestAnimationFrame(loop);
 
     const { solved } = analyzeStability(grid);
     renderer.hover = input?.hover || null;
 
     renderer.drawGrid(grid, now, FEEL);
-    if(solved && !loop._solvedFired){
+    if (solved && !loop._solvedFired) {
         loop._solvedFired = true;
         sfxSolved();
-        setTimeout(()=>{
+        setTimeout(() => {
             const next = (currentLevelIndex + 1) % levels.length;
             startLevel(next);
             loop._solvedFired = false;
@@ -260,10 +260,10 @@ function loop(now){
     requestAnimationFrame(loop);
 }
 
-function toggleSnow(){
+function toggleSnow() {
     isSnowing = !isSnowing;
     saveProgress();
-    if(isSnowing){
+    if (isSnowing) {
         snowContainer.style.display = 'block';
         startSnow();
     } else {
@@ -273,7 +273,7 @@ function toggleSnow(){
         });
 
         setTimeout(() => {
-            if(!isSnowing){
+            if (!isSnowing) {
                 snowContainer.innerHTML = '';
                 snowContainer.style.display = 'none';
             }
@@ -281,14 +281,14 @@ function toggleSnow(){
     }
     sfxClick();
 }
-function startSnow(){
+function startSnow() {
     const count = 50;
-    for(let i = 0; i<count; i++){
+    for (let i = 0; i < count; i++) {
         createSnowflake();
     }
 }
-function createSnowflake(){
-    if(!isSnowing) return;
+function createSnowflake() {
+    if (!isSnowing) return;
     const flake = document.createElement('div');
     flake.classList.add('snowflake');
     flake.textContent = '❄';
@@ -302,7 +302,7 @@ function createSnowflake(){
     flake.style.animation = `fall ${dur}s linear infinite`;
     snowContainer.appendChild(flake);
 
-    if(!document.getElementById('snow-style')){
+    if (!document.getElementById('snow-style')) {
         const style = document.createElement('style');
         style.id = 'snow-style';
         style.textContent = `
@@ -318,18 +318,25 @@ function createSnowflake(){
 //Ui wiring
 undoBtn.addEventListener('click', undo);
 redoBtn.addEventListener('click', redo);
-restartBtn.addEventListener('click', restart);
-muteBtn.addEventListener('click', ()=>{
+restartBtn.addEventListener('click', () => {
+    restart();
+    const track = bgmTracks[currentFeelKey];
+    if (!muted && track.paused) {
+        track.play().catch(() => { });
+    }
+});
+
+muteBtn.addEventListener('click', () => {
     muted = !muted;
-    muteBtn.textContent = muted? 'UNMUTE' : 'MUTE';
+    muteBtn.textContent = muted ? 'UNMUTE' : 'MUTE';
     sfxClick();
     saveProgress();
 
     const currentTrack = bgmTracks[currentFeelKey];
-    if(muted){
+    if (muted) {
         currentTrack.pause();
     } else {
-        currentTrack.play().catch(() => {});
+        currentTrack.play().catch(() => { });
     }
 });
 snowBtn.addEventListener('click', toggleSnow);
@@ -358,19 +365,19 @@ feelItems.forEach(item => {
     });
 });
 window.addEventListener('click', () => {
-    if(feelOptions.classList.contains('show-dropdown')){
+    if (feelOptions.classList.contains('show-dropdown')) {
         feelOptions.classList.remove('show-dropdown');
     }
 });
 
-function playBackgroundMusic(key){
+function playBackgroundMusic(key) {
     Object.keys(bgmTracks).forEach(k => {
-        if(k !== key){
+        if (k !== key) {
             bgmTracks[k].pause();
             bgmTracks[k].currentTime = 0;
         }
     });
-    if(!muted){
+    if (!muted) {
         const track = bgmTracks[key];
         track.play().catch(e => console.log("Waiting for user interaction to play music."));
     }
@@ -382,26 +389,26 @@ function playBackgroundMusic(key){
     const saved = loadProgress();
     let startIdx = 0;
 
-    if(saved){
-        if(typeof saved.levelIndex === 'number' && saved.levelIndex < levels.length){
+    if (saved) {
+        if (typeof saved.levelIndex === 'number' && saved.levelIndex < levels.length) {
             startIdx = saved.levelIndex;
         }
-        if(saved.muted){
+        if (saved.muted) {
             muted = true;
             muteBtn.textContent = 'UNMUTE';
         }
-        if (saved.isSnowing){
+        if (saved.isSnowing) {
             isSnowing = true;
             snowContainer.style.display = 'block';
             startSnow();
         }
-        if (saved.feelKey && FeelPresets[saved.feelKey]){
+        if (saved.feelKey && FeelPresets[saved.feelKey]) {
             currentFeelKey = saved.feelKey;
             FEEL = FeelPresets[saved.feelKey];
 
-            if(currentFeelKey === 'A') feelBtn.textContent = "SOFT 🎧";
-            if(currentFeelKey === 'B') feelBtn.textContent = "SNAPPY 🎧";
-            if(currentFeelKey === 'C') feelBtn.textContent = "CRISP 🎧";
+            if (currentFeelKey === 'A') feelBtn.textContent = "SOFT 🎧";
+            if (currentFeelKey === 'B') feelBtn.textContent = "SNAPPY 🎧";
+            if (currentFeelKey === 'C') feelBtn.textContent = "CRISP 🎧";
         }
     }
     playBackgroundMusic(currentFeelKey);
