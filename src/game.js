@@ -87,7 +87,7 @@ function tone(freq, dur, attack) {
 function chord(freqs, dur) { freqs.forEach((f, i) => setTimeout(() => tone(f, dur, 0.005), i * 12)); }
 
 async function loadLevels() {
-    const files = ['tutorial.json', 'level1.json', 'level2.json', 'level3.json', 'level4.json'];
+    const files = ['tutorial.json', 'level1.json', 'level2.json', 'level3.json', 'level4.json', 'level5.json'];
     levels = await Promise.all(files.map(async f => {
         const res = await fetch(`./levels/${f}`);
         if (!res.ok) throw new Error('Failed to load ' + f);
@@ -101,10 +101,17 @@ async function loadLevels() {
             if (!Array.isArray(lvl.tiles[y])) lvl.tiles[y] = [];
             for (let x = 0; x < lvl.cols; x++) {
                 let v = lvl.tiles[y][x];
+
+                let isLocked = false;
+
+                if(typeof v === 'string' && v.endsWith('!')){
+                    isLocked = true;
+                    v = v.slice(0, -1);
+                }
                 if (typeof v === 'string') {
                     v = v.trim().toLowerCase();
                     if (!['up', 'right', 'down', 'left'].includes(v)) v = null;
-                    lvl.tiles[y][x] = v;
+                    lvl.tiles[y][x] = {dir: v, locked: isLocked};
                 } else {
                     lvl.tiles[y][x] = null;
                 }
@@ -213,7 +220,8 @@ window.addEventListener('click', () => {
 function rotateAt(x, y) {
     tryResumeAudioOnGesture();
     const t = grid.get(x, y);
-    if (!t) return;
+
+    if (!t || t.locked) return;
 
     //push undo
     undoStack.push({ x, y, dir: t.direction });

@@ -2,10 +2,11 @@ export const DIRS = ['up','right','down','left'];
 export const OPP = {up:'down', right:'left', down:'up', left:'right'};
 
 export class Tile{
-    constructor(ix,iy,direction){
+    constructor(ix,iy,direction, locked = false){
         this.ix = ix;
         this.iy = iy;
         this.direction = (typeof direction === 'string' && DIRS.includes(direction)) ? direction : 'up';
+        this.locked = locked;
         this.targetAngle = this.dirToAngle(this.direction);
         this.currentAngle = this.targetAngle;
         this.animating = false;

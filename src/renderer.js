@@ -103,16 +103,21 @@ export class Renderer {
             ctx.save();
             ctx.translate(cx + jx, cy + jy);
 
+            if(tile.locked){
+                ctx.fillStyle = '#8a7f70';
+                ctx.strokeStyle = '#3e3025';
+            } else {
+                ctx.fillStyle = 'rgba(255,196,174,0.92)';
+                ctx.strokeStyle = 'rgba(79,62,45,0.6)';
+            }
+
             let glow = 0;//hover glow
             if(this.hover && this.hover.x===x && this.hover.y===y){
                 const t = (Math.sin(now/600) + 1)/2;
                 glow = t * 0.5 + 0.2;
             }
-
-            ctx.fillStyle = 'rgba(215,196,174,0.92)';
-            ctx.strokeStyle = 'rgba(79,62,45,0.6)';
+            
             ctx.lineWidth = 2.2;
-
             ctx.beginPath();
             this.roundRectWobble(ctx, -half, -half, half*2, half*2, r, tile);
             ctx.fill();

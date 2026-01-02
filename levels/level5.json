@@ -3,6 +3,10 @@
     "cols": 5,
     "rows": 5,
     "tiles": [
-        ["down", null, "down", null]
+        ["right", "left", "right", "left", "down"],
+        ["up", null, null, null, "down"],
+        ["up", null, null, null, "down"],
+        ["up", null, null, null, "down"],
+        ["right", "left", "right", "left", "up"]
     ]
 }
