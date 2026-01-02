@@ -8,7 +8,8 @@ const canvas = document.getElementById('game');
 const redoBtn = document.getElementById('btn-redo');
 const undoBtn = document.getElementById('btn-undo');
 const restartBtn = document.getElementById('btn-restart');
-const levelSelect = document.getElementById('level-select');
+const levelBtn = document.getElementById('level-btn');
+const levelOptions = document.getElementById('level-options');
 const feelBtn = document.getElementById('feel-btn');
 const feelOptions = document.getElementById('feel-options');
 const feelItems = document.querySelectorAll('.dropdown-item')
@@ -111,12 +112,18 @@ async function loadLevels() {
     }));
 
     //populate level select
-    levelSelect.innerHTML = '';
+    levelOptions.innerHTML = '';
     levels.forEach((lvl, i)=>{
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = i === 0 ? "TUTORIAL" : `LEVEL ${i}`;
-        levelSelect.appendChild(opt);
+        const div = document.createElement('div');
+        div.className = 'dropdown-item';
+        div.textContent = i === 0 ? "TUTORIAL" : `LEVEL ${i}`;
+
+        div.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startLevel(i);
+            levelOptions.classList.remove('show-dropdown');
+        });
+        levelOptions.appendChild(div);
     });
 }
 
@@ -159,9 +166,21 @@ function startLevel(i){
     );
 
     sfxClick();
-
+    levelBtn.textContent = i === 0 ? "TUTORIAL" : `LEVEL ${i}`;
     saveProgress();
 }
+
+levelBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    feelOptions.classList.remove('show-dropdown');
+    levelOptions.classList.toggle('show-dropdown');
+    sfxClick();
+});
+window.addEventListener('click', () => {
+    feelOptions.classList.remove('show-dropdown');
+    levelOptions.classList.remove('show-dropdown');
+});
+
 function rotateAt(x,y){
     tryResumeAudioOnGesture();
     const t = grid.get(x,y);
@@ -314,10 +333,6 @@ muteBtn.addEventListener('click', ()=>{
     }
 });
 snowBtn.addEventListener('click', toggleSnow);
-
-levelSelect.addEventListener('change', () => {
-    startLevel(parseInt(levelSelect.value,10));
-});
 
 //dropdown
 feelBtn.addEventListener('click', (e) => {
